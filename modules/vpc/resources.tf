@@ -2,6 +2,10 @@ provider "aws" {
   region = "${var.region}"
 }
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 resource "aws_vpc" "vpc" {
   cidr_block = "${var.cidr_block}"
 
@@ -13,30 +17,30 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_subnet" "private_subnets" {
-  count = "${length(var.availability_zones)}"
+  count = "${length(data.aws_availability_zones.available.names)}"
 
   cidr_block = "${cidrsubnet(
     var.cidr_block,
-    ceil(log(length(var.availability_zones) * 2, 2)),
+    ceil(log(length(data.aws_availability_zones.available.names)* 2, 2)),
     count.index * 2
   )}"
 
   vpc_id                          = "${aws_vpc.vpc.id}"
-  availability_zone               = "${var.region}${element(var.availability_zones, count.index)}"
+  availability_zone               = "${element(data.aws_availability_zones.available.names, count.index)}"
   assign_ipv6_address_on_creation = false
   map_public_ip_on_launch         = false
 
   tags {
-    Name = "subnet-${var.region}${element(var.availability_zones, count.index)}-private"
+    Name = "subnet-${element(data.aws_availability_zones.available.names, count.index)}-private"
   }
 }
 
 resource "aws_subnet" "public_subnets" {
-  count = "${length(var.availability_zones)}"
+  count = "${length(data.aws_availability_zones.available.names)}"
 
   cidr_block = "${cidrsubnet(
     var.cidr_block,
-    ceil(log(length(var.availability_zones) * 2, 2)),
+    ceil(log(length(data.aws_availability_zones.available.names) * 2, 2)),
     count.index * 2 + 1
   )}"
 
@@ -47,12 +51,12 @@ resource "aws_subnet" "public_subnets" {
   )}"
 
   vpc_id                          = "${aws_vpc.vpc.id}"
-  availability_zone               = "${var.region}${element(var.availability_zones, count.index)}"
+  availability_zone               = "${element(data.aws_availability_zones.available.names, count.index)}"
   assign_ipv6_address_on_creation = true
   map_public_ip_on_launch         = true
 
   tags {
-    Name = "subnet-${var.region}${element(var.availability_zones, count.index)}-public"
+    Name = "subnet-${element(data.aws_availability_zones.available.names, count.index)}-public"
   }
 }
 
@@ -76,8 +80,8 @@ resource "aws_route_table" "public_route_table" {
   vpc_id = "${aws_vpc.vpc.id}"
 
   route {
-    cidr_block      = "0.0.0.0/0"
-    gateway_id      = "${aws_internet_gateway.gw.id}"
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.gw.id}"
   }
 
   route {
