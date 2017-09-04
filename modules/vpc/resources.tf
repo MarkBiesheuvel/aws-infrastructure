@@ -25,9 +25,15 @@ resource "aws_subnet" "private_subnets" {
     count.index * 2
   )}"
 
+  ipv6_cidr_block = "${cidrsubnet(
+    aws_vpc.vpc.ipv6_cidr_block,
+    8,
+    count.index * 2
+  )}"
+
   vpc_id                          = "${aws_vpc.vpc.id}"
   availability_zone               = "${element(data.aws_availability_zones.available.names, count.index)}"
-  assign_ipv6_address_on_creation = false
+  assign_ipv6_address_on_creation = true
   map_public_ip_on_launch         = false
 
   tags {
@@ -47,7 +53,7 @@ resource "aws_subnet" "public_subnets" {
   ipv6_cidr_block = "${cidrsubnet(
     aws_vpc.vpc.ipv6_cidr_block,
     8,
-    count.index
+    count.index * 2 + 1
   )}"
 
   vpc_id                          = "${aws_vpc.vpc.id}"
@@ -104,4 +110,32 @@ resource "aws_route_table_association" "public_subnet_route_table" {
   count          = "${aws_subnet.public_subnets.count}"
   subnet_id      = "${element(aws_subnet.public_subnets.*.id, count.index)}"
   route_table_id = "${aws_route_table.public_route_table.id}"
+}
+
+resource "aws_security_group" "ssh" {
+  name        = "ssh-access"
+  description = "Allow SSH access"
+  vpc_id      = "${aws_vpc.vpc.id}"
+
+  ingress {
+    from_port = 0
+    to_port   = 0
+    protocol  = -1
+    self      = true
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["x.x.x.x/32"]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = -1
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
 }
