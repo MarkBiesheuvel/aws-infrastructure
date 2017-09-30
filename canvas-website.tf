@@ -1,7 +1,8 @@
 module "canvas-website-hosting" {
-  source  = "./modules/website"
-  url     = "canvas.markbiesheuvel.nl"
-  name    = "canvas-website"
+  source = "./modules/website"
+  url    = "canvas.markbiesheuvel.nl"
+  name   = "canvas-website"
+
   aliases = [
     "canvas.markbiesheuvel.nl",
     "canvas.markbiesheuvel.com",
