@@ -20,7 +20,6 @@ resource "aws_route53_record" "alias" {
   }
 }
 
-
 resource "aws_route53_record" "name_servers" {
   count   = "${aws_route53_zone.all.count}"
   zone_id = "${element(aws_route53_zone.all.*.zone_id, count.index)}"
