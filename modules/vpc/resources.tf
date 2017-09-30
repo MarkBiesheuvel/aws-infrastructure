@@ -1,5 +1,5 @@
-provider "aws" {
-  region = "${var.region}"
+data "aws_region" "current" {
+  current = true
 }
 
 data "aws_availability_zones" "available" {
@@ -12,7 +12,7 @@ resource "aws_vpc" "vpc" {
   assign_generated_ipv6_cidr_block = true
 
   tags {
-    Name = "vpc-${var.region}"
+    Name = "vpc-${data.aws_region.current.name}"
   }
 }
 
@@ -70,7 +70,7 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = "${aws_vpc.vpc.id}"
 
   tags {
-    Name = "igw-${var.region}"
+    Name = "igw-${data.aws_region.current.name}"
   }
 }
 
@@ -78,7 +78,7 @@ resource "aws_default_route_table" "private_route_table" {
   default_route_table_id = "${aws_vpc.vpc.default_route_table_id}"
 
   tags {
-    Name = "rtb-${var.region}-private"
+    Name = "rtb-${data.aws_region.current.name}-private"
   }
 }
 
@@ -96,7 +96,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags {
-    Name = "rtb-${var.region}-public"
+    Name = "rtb-${data.aws_region.current.name}-public"
   }
 }
 
@@ -128,7 +128,8 @@ resource "aws_security_group" "ssh" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["x.x.x.x/32"]
+    # TODO: create kms key to encrypt own IP
+    cidr_blocks = ["0.0.0.0/32"]
   }
 
   egress {
