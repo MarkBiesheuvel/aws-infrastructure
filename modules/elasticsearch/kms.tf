@@ -1,4 +1,3 @@
-
 resource "aws_kms_key" "elasticsearch" {}
 
 resource "aws_kms_alias" "elasticsearch" {
