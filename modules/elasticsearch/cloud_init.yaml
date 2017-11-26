@@ -1,0 +1,63 @@
+#cloud-config
+
+package_upgrade: true
+
+yum_repos:
+  elasticsearch:
+    name: Elasticsearch repository for 6.x packages
+    baseurl: https://artifacts.elastic.co/packages/6.x/yum
+    gpgcheck: true
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    enabled: true
+    autorefresh: true
+    type: rpm=md
+
+packages:
+- java-1.8.0
+- nginx
+- git
+- elasticsearch
+
+write_files:
+  - path: /root/.gitconfig
+    permissions: '0644'
+    owner: root:root
+    content: |
+      [credential]
+        helper = !aws codecommit credential-helper $@
+        UseHttpPath = true
+  - path: /etc/nginx/nginx.conf
+    permissions: '0644'
+    owner: root:root
+    content: |
+      events {
+        worker_connections 1024;
+      }
+
+      http {
+        server {
+          listen 80;
+          location / {
+            proxy_pass http://127.0.0.1:8000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          }
+        }
+      }
+
+runcmd:
+  - yum remove java-1.7.0-openjdk -y
+  - aws ec2 associate-address --allocation-id ${allocation_id} --instance-id `curl http://169.254.169.254/latest/meta-data/instance-id` --region ${region}
+  - chkconfig --add elasticsearch
+  - service elasticsearch start
+  - chkconfig --add nginx
+  - service nginx start
+  - export HOME=/root
+  - cd ~
+  - git clone ${repo}
+  - cd elastic-car/api
+  - pip install -r requirements.txt
+  - pip install gunicorn
+  - /usr/local/bin/gunicorn -w 4 app:app &
+
+final_message: "The system is finally up, after $UPTIME seconds"
