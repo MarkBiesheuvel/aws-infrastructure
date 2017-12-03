@@ -17,10 +17,10 @@ resource "aws_s3_bucket" "source" {
   }
 }
 
-resource "aws_s3_bucket_object" "sample" {
+resource "aws_s3_bucket_object" "source" {
   bucket = "${aws_s3_bucket.source.id}"
-  key    = "sample.csv"
-  source = "${path.module}/files/sample.csv"
+  key    = "${var.source_filename}"
+  source = "${path.module}/files/${var.source_filename}"
 
   server_side_encryption = "aws:kms"
   kms_key_id             = "${aws_kms_key.elasticsearch.arn}"

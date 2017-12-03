@@ -21,9 +21,11 @@ data "template_file" "user_data" {
   template = "${file("${path.module}/cloud_init.yaml")}"
 
   vars {
-    allocation_id = "${aws_eip.ip.id}"
-    region        = "${data.aws_region.current.name}"
-    repo          = "${var.repository_url}"
+    allocation_id   = "${aws_eip.ip.id}"
+    region          = "${data.aws_region.current.name}"
+    repo            = "${var.repository_url}"
+    source_s3_path  = "s3://${aws_s3_bucket.source.id}/${aws_s3_bucket_object.source.key}"
+    source_filename = "${var.source_filename}"
   }
 }
 

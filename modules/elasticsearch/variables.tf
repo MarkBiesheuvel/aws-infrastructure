@@ -9,3 +9,8 @@ variable "subnet_ids" {
 variable "repository_url" {
   type = "string"
 }
+
+variable "source_filename" {
+  type    = "string"
+  default = "sample.csv"
+}
