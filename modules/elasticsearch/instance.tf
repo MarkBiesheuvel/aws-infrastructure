@@ -2,6 +2,10 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+data "aws_region" "current" {
+  current = true
+}
+
 data "aws_ami" "amazon_linux" {
   most_recent = true
 
@@ -16,11 +20,10 @@ data "aws_ami" "amazon_linux" {
 data "template_file" "user_data" {
   template = "${file("${path.module}/cloud_init.yaml")}"
 
-  # TODO: replace hardcoded variables
   vars {
     allocation_id = "${aws_eip.ip.id}"
-    region        = "eu-central-1"
-    repo          = "https://git-codecommit.eu-central-1.amazonaws.com/v1/repos/elastic-car"
+    region        = "${data.aws_region.current.name}"
+    repo          = "${var.repository_url}"
   }
 }
 
@@ -37,6 +40,7 @@ resource "aws_spot_instance_request" "elasticsearch" {
   spot_price           = "0.027"
   spot_type            = "persistent"
   iam_instance_profile = "${aws_iam_instance_profile.elasticsearch.name}"
+  wait_for_fulfillment = true
 
   vpc_security_group_ids = [
     "${aws_security_group.elasticsearch.id}",

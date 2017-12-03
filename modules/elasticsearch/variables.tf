@@ -5,3 +5,7 @@ variable "vpc_id" {
 variable "subnet_ids" {
   type = "map"
 }
+
+variable "repository_url" {
+  type = "string"
+}

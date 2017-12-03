@@ -54,8 +54,8 @@ runcmd:
   - service nginx start
   - export HOME=/root
   - cd ~
-  - git clone ${repo}
-  - cd elastic-car/api
+  - git clone ${repo} project
+  - cd project/api
   - pip install -r requirements.txt
   - pip install gunicorn
   - /usr/local/bin/gunicorn -w 4 app:app &
