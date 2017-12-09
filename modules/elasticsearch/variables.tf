@@ -14,3 +14,7 @@ variable "source_filename" {
   type    = "string"
   default = "sample.csv"
 }
+
+variable "hosted_zone_ids" {
+  type = "map"
+}
