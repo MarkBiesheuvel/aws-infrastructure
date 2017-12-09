@@ -1,6 +1,10 @@
 #cloud-config
 
+package_update: true
+
 package_upgrade: true
+
+timezone: 'Europe/Amsterdam'
 
 yum_repos:
   elasticsearch:
@@ -17,8 +21,16 @@ packages:
 - nginx
 - git
 - elasticsearch
+- zsh
 
 write_files:
+  - path: /home/ec2-user/.zshrc
+    permissions: '0644'
+    content: |
+      zstyle :compinstall filename '/home/ec2-user/.zshrc'
+
+      autoload -Uz compinit
+      compinit
   - path: /root/.gitconfig
     permissions: '0644'
     owner: root:root
@@ -47,6 +59,7 @@ write_files:
 
 runcmd:
   - yum remove java-1.7.0-openjdk -y
+  - sed -i 's|/bin/bash|/bin/zsh|g' /etc/passwd
   - aws ec2 associate-address --allocation-id ${allocation_id} --instance-id `curl http://169.254.169.254/latest/meta-data/instance-id` --region ${region}
   - chkconfig --add elasticsearch
   - service elasticsearch start
