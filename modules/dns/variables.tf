@@ -7,6 +7,11 @@ variable "mx_records" {
   default = []
 }
 
+variable "a_records" {
+  type    = "list"
+  default = []
+}
+
 variable "alias_records" {
   type    = "list"
   default = []

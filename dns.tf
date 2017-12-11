@@ -7,14 +7,6 @@ module "dns" {
     "biesheuvel.amsterdam.",
   ]
 
-  mx_records = [
-    "1 ASPMX.L.GOOGLE.COM.",
-    "5 ALT1.ASPMX.L.GOOGLE.COM.",
-    "5 ALT2.ASPMX.L.GOOGLE.COM.",
-    "10 ALT3.ASPMX.L.GOOGLE.COM.",
-    "10 ALT4.ASPMX.L.GOOGLE.COM.",
-  ]
-
   keybase_verification = {
     markbiesheuvel.nl.    = "MQdMI-5HCeqM2qtBfIFvp-KuOuuzcF4jpRKyXPC_qRU"
     markbiesheuvel.com.   = "JjNLbpnupl7R4zaUm1NjR4oRXwmPhdycaEPSymTkubw"
@@ -34,9 +26,38 @@ module "dns" {
       name    = "${module.personal-website-hosting.cloudfront_domain_name}"
     },
     {
-      prefix  = "*."
+      prefix  = "www."
       zone_id = "${module.personal-website-hosting.cloudfront_zone_id}"
       name    = "${module.personal-website-hosting.cloudfront_domain_name}"
+    },
+    {
+      prefix  = "canvas."
+      zone_id = "${module.canvas-website-hosting.cloudfront_zone_id}"
+      name    = "${module.canvas-website-hosting.cloudfront_domain_name}"
+    },
+    {
+      prefix  = "cars."
+      zone_id = "${module.cars-website-hosting.cloudfront_zone_id}"
+      name    = "${module.cars-website-hosting.cloudfront_domain_name}"
+    },
+    {
+      prefix  = "api.cars."
+      zone_id = "${module.elasticsearch.cloudfront_zone_id}"
+      name    = "${module.elasticsearch.cloudfront_domain_name}"
+    },
+  ]
+
+  a_records = [
+    {
+      prefix = "ec2.api.cars."
+      records = "${module.elasticsearch.ec2_public_ip}"
+    },
+  ]
+
+  mx_records = [
+    {
+      prefix = ""
+      records = "1 ASPMX.L.GOOGLE.COM.,5 ALT1.ASPMX.L.GOOGLE.COM.,5 ALT2.ASPMX.L.GOOGLE.COM.,10 ALT3.ASPMX.L.GOOGLE.COM.,10 ALT4.ASPMX.L.GOOGLE.COM."
     },
   ]
 }

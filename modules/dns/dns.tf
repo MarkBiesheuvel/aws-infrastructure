@@ -20,6 +20,30 @@ resource "aws_route53_record" "alias" {
   }
 }
 
+resource "aws_route53_record" "a" {
+  count   = "${aws_route53_zone.all.count * length(var.a_records)}"
+  zone_id = "${element(aws_route53_zone.all.*.zone_id, count.index % aws_route53_zone.all.count)}"
+  name    = "${lookup(var.a_records[count.index / aws_route53_zone.all.count], "prefix")}${element(aws_route53_zone.all.*.name, count.index % aws_route53_zone.all.count)}"
+  type    = "A"
+  ttl     = 300
+
+  records = [
+    "${split(",", lookup(var.a_records[count.index / aws_route53_zone.all.count], "records"))}",
+  ]
+}
+
+resource "aws_route53_record" "mx" {
+  count   = "${aws_route53_zone.all.count * length(var.mx_records)}"
+  zone_id = "${element(aws_route53_zone.all.*.zone_id, count.index % aws_route53_zone.all.count)}"
+  name    = "${lookup(var.mx_records[count.index / aws_route53_zone.all.count], "prefix")}${element(aws_route53_zone.all.*.name, count.index % aws_route53_zone.all.count)}"
+  type    = "MX"
+  ttl     = 86400
+
+  records = [
+    "${split(",", lookup(var.mx_records[count.index / aws_route53_zone.all.count], "records"))}",
+  ]
+}
+
 resource "aws_route53_record" "name_servers" {
   count   = "${aws_route53_zone.all.count}"
   zone_id = "${element(aws_route53_zone.all.*.zone_id, count.index)}"
@@ -33,16 +57,6 @@ resource "aws_route53_record" "name_servers" {
     "${element(aws_route53_zone.all.*.name_servers.2, count.index)}",
     "${element(aws_route53_zone.all.*.name_servers.3, count.index)}",
   ]
-}
-
-resource "aws_route53_record" "mx" {
-  count   = "${aws_route53_zone.all.count}"
-  zone_id = "${element(aws_route53_zone.all.*.zone_id, count.index)}"
-  name    = "${element(aws_route53_zone.all.*.name, count.index)}"
-  type    = "MX"
-  ttl     = "86400"
-
-  records = "${var.mx_records}"
 }
 
 resource "aws_route53_record" "txt" {
