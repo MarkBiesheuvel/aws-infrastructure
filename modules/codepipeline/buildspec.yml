@@ -6,7 +6,7 @@ phases:
       - "curl -sS http://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -"
       - "echo \"deb http://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list"
       - "apt-get update -y"
-      - "apt-get install -y graphicsmagick yarn"
+      - "apt-get install -y yarn"
   pre_build:
     commands:
       - "echo Pre-build started on `date`"
