@@ -49,14 +49,14 @@ module "dns" {
 
   a_records = [
     {
-      prefix = "ec2.api.cars."
+      prefix  = "ec2.api.cars."
       records = "${module.elasticsearch.ec2_public_ip}"
     },
   ]
 
   mx_records = [
     {
-      prefix = ""
+      prefix  = ""
       records = "1 ASPMX.L.GOOGLE.COM.,5 ALT1.ASPMX.L.GOOGLE.COM.,5 ALT2.ASPMX.L.GOOGLE.COM.,10 ALT3.ASPMX.L.GOOGLE.COM.,10 ALT4.ASPMX.L.GOOGLE.COM."
     },
   ]
