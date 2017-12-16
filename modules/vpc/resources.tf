@@ -1,5 +1,5 @@
-data "aws_region" "current" {
-  current = true
+provider "aws" {
+  region = "${var.region}"
 }
 
 data "aws_availability_zones" "available" {
@@ -12,7 +12,7 @@ resource "aws_vpc" "vpc" {
   assign_generated_ipv6_cidr_block = true
 
   tags {
-    Name = "vpc-${data.aws_region.current.name}"
+    Name = "vpc-${var.region}"
   }
 }
 
@@ -70,7 +70,7 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = "${aws_vpc.vpc.id}"
 
   tags {
-    Name = "igw-${data.aws_region.current.name}"
+    Name = "igw-${var.region}"
   }
 }
 
@@ -78,7 +78,7 @@ resource "aws_default_route_table" "private_route_table" {
   default_route_table_id = "${aws_vpc.vpc.default_route_table_id}"
 
   tags {
-    Name = "rtb-${data.aws_region.current.name}-private"
+    Name = "rtb-${var.region}-private"
   }
 }
 
@@ -96,7 +96,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags {
-    Name = "rtb-${data.aws_region.current.name}-public"
+    Name = "rtb-${var.region}-public"
   }
 }
 
