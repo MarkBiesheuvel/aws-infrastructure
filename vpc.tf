@@ -1,7 +1,6 @@
 # A region consists of three parts, expressed by this regex: /([a-z]+)-([a-z]+)-([0-9]+)/
 # To order all the VPCs neatly by region the following structure is followed
 
-
 # For the first group
 #  10.0.0.0/11   | eu
 #  10.32.0.0/11  | us
