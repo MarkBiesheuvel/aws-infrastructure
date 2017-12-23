@@ -10,6 +10,8 @@ resource "aws_vpc" "vpc" {
   cidr_block = "${var.cidr_block}"
 
   assign_generated_ipv6_cidr_block = true
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags {
     Name = "vpc-${var.region}"
@@ -110,4 +112,16 @@ resource "aws_route_table_association" "public_subnet_route_table" {
   count          = "${aws_subnet.public_subnets.count}"
   subnet_id      = "${element(aws_subnet.public_subnets.*.id, count.index)}"
   route_table_id = "${aws_route_table.public_route_table.id}"
+}
+
+resource "aws_db_subnet_group" "public_subnets" {
+  name        = "public-subnets"
+  subnet_ids  = ["${aws_subnet.public_subnets.*.id}"]
+  description = "Public subnets"
+}
+
+resource "aws_db_subnet_group" "private_subnets" {
+  name        = "private-subnets"
+  subnet_ids  = ["${aws_subnet.private_subnets.*.id}"]
+  description = "Public subnets"
 }
