@@ -26,7 +26,7 @@ module "dns" {
       name    = "${module.personal-website-hosting.cloudfront_domain_name}"
     },
     {
-      prefix  = "www."
+      prefix  = "*."
       zone_id = "${module.personal-website-hosting.cloudfront_zone_id}"
       name    = "${module.personal-website-hosting.cloudfront_domain_name}"
     },
