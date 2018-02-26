@@ -9,7 +9,10 @@ resource "aws_cloudfront_origin_access_identity" "identity" {
 }
 
 resource "aws_cloudfront_distribution" "website" {
-  depends_on = ["aws_lambda_function.redirect"]
+  depends_on = [
+    "aws_lambda_function.redirect",
+    "aws_lambda_function.headers",
+  ]
 
   enabled             = true
   is_ipv6_enabled     = true
@@ -49,6 +52,11 @@ resource "aws_cloudfront_distribution" "website" {
     lambda_function_association {
       event_type = "viewer-request"
       lambda_arn = "${aws_lambda_function.redirect.qualified_arn}"
+    }
+
+    lambda_function_association {
+      event_type = "viewer-response"
+      lambda_arn = "${aws_lambda_function.headers.qualified_arn}"
     }
   }
 
