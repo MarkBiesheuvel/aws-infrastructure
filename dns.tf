@@ -30,28 +30,6 @@ module "dns" {
       zone_id = "${module.personal-website-hosting.cloudfront_zone_id}"
       name    = "${module.personal-website-hosting.cloudfront_domain_name}"
     },
-    {
-      prefix  = "canvas."
-      zone_id = "${module.canvas-website-hosting.cloudfront_zone_id}"
-      name    = "${module.canvas-website-hosting.cloudfront_domain_name}"
-    },
-    {
-      prefix  = "cars."
-      zone_id = "${module.cars-website-hosting.cloudfront_zone_id}"
-      name    = "${module.cars-website-hosting.cloudfront_domain_name}"
-    },
-    {
-      prefix  = "api.cars."
-      zone_id = "${module.elasticsearch.cloudfront_zone_id}"
-      name    = "${module.elasticsearch.cloudfront_domain_name}"
-    },
-  ]
-
-  a_records = [
-    {
-      prefix  = "ec2.api.cars."
-      records = "${module.elasticsearch.ec2_public_ip}"
-    },
   ]
 
   mx_records = [
