@@ -20,11 +20,11 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_subnet" "private_subnets" {
-  count = "${length(data.aws_availability_zones.available.names)}"
+  count = "${min(length(data.aws_availability_zones.available.names), 8)}"
 
   cidr_block = "${cidrsubnet(
     var.cidr_block,
-    ceil(log(length(data.aws_availability_zones.available.names)* 2, 2)),
+    4,
     count.index * 2
   )}"
 
@@ -45,11 +45,11 @@ resource "aws_subnet" "private_subnets" {
 }
 
 resource "aws_subnet" "public_subnets" {
-  count = "${length(data.aws_availability_zones.available.names)}"
+  count = "${min(length(data.aws_availability_zones.available.names), 8)}"
 
   cidr_block = "${cidrsubnet(
     var.cidr_block,
-    ceil(log(length(data.aws_availability_zones.available.names) * 2, 2)),
+    4,
     count.index * 2 + 1
   )}"
 
