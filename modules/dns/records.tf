@@ -11,6 +11,19 @@ resource "aws_route53_record" "alias" {
   }
 }
 
+resource "aws_route53_record" "alias_ipv6" {
+  count   = "${aws_route53_zone.all.count * length(var.alias_records)}"
+  zone_id = "${element(aws_route53_zone.all.*.zone_id, count.index % aws_route53_zone.all.count)}"
+  name    = "${lookup(var.alias_records[count.index / aws_route53_zone.all.count], "prefix")}${element(aws_route53_zone.all.*.name, count.index % aws_route53_zone.all.count)}"
+  type    = "AAAA"
+
+  alias {
+    zone_id                = "${lookup(var.alias_records[count.index / aws_route53_zone.all.count], "zone_id")}"
+    name                   = "${lookup(var.alias_records[count.index / aws_route53_zone.all.count], "name")}"
+    evaluate_target_health = false
+  }
+}
+
 resource "aws_route53_record" "a" {
   count   = "${aws_route53_zone.all.count * length(var.a_records)}"
   zone_id = "${element(aws_route53_zone.all.*.zone_id, count.index % aws_route53_zone.all.count)}"
