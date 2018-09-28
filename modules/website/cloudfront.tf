@@ -55,7 +55,7 @@ resource "aws_cloudfront_distribution" "website" {
     }
 
     lambda_function_association {
-      event_type = "viewer-response"
+      event_type = "origin-response"
       lambda_arn = "${aws_lambda_function.headers.qualified_arn}"
     }
   }
