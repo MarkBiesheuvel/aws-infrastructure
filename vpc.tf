@@ -24,6 +24,7 @@ module "vpc-eu-central-1" {
 # Within eu-west for the third group
 #  10.4.0.0/16 | eu-west-1
 #  10.5.0.0/16 | eu-west-2
+#  10.5.0.0/16 | eu-west-3
 
 module "vpc-eu-west-1" {
   source     = "./modules/vpc"
@@ -35,6 +36,12 @@ module "vpc-eu-west-2" {
   source     = "./modules/vpc"
   region     = "eu-west-2"
   cidr_block = "10.5.0.0/16"
+}
+
+module "vpc-eu-west-3" {
+  source     = "./modules/vpc"
+  region     = "eu-west-3"
+  cidr_block = "10.6.0.0/16"
 }
 
 # Within us for the second group

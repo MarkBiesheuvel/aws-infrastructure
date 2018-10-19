@@ -1,5 +1,6 @@
 # Default region
 provider "aws" {
+  version = "~> 1.7"
   region = "eu-central-1"
 }
 
