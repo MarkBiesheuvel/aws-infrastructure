@@ -1,7 +1,7 @@
 # Default region
 provider "aws" {
   version = "~> 1.7"
-  region = "eu-central-1"
+  region  = "eu-central-1"
 }
 
 # Global services like ACM for CloudFront

@@ -1,6 +1,5 @@
-
 module "remote_state_storage" {
-  source         = "modules/remote_state_storage"
+  source = "modules/remote_state_storage"
 }
 
 terraform {
