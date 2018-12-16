@@ -6,3 +6,13 @@ variable "cidr_block" {
 variable "region" {
   type = "string"
 }
+
+variable "interface_endpoints" {
+  type = "list"
+  default = []
+}
+
+variable "gateways_endpoints" {
+  type = "list"
+  default = ["s3", "dynamodb"]
+}

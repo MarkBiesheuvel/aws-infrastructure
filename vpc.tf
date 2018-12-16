@@ -17,9 +17,10 @@
 #  10.0.0.0/16 | eu-central-1
 
 module "vpc-eu-central-1" {
-  source     = "./modules/vpc"
-  region     = "eu-central-1"
-  cidr_block = "10.0.0.0/16"
+  source              = "./modules/vpc"
+  region              = "eu-central-1"
+  cidr_block          = "10.0.0.0/16"
+  interface_endpoints = ["ssm", "kms"]
 }
 
 # Within eu-west for the third group
