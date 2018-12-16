@@ -11,6 +11,7 @@
 # Within eu for the second group
 #  10.0.0.0/14 | eu-central
 #  10.4.0.0/14 | eu-west
+#  10.8.0.0/14 | eu-north
 
 # Within eu-central for the third group
 #  10.0.0.0/16 | eu-central-1
@@ -42,6 +43,15 @@ module "vpc-eu-west-3" {
   source     = "./modules/vpc"
   region     = "eu-west-3"
   cidr_block = "10.6.0.0/16"
+}
+
+# Within eu-north for the third group
+#  10.8.0.0/16 | eu-north-1
+
+module "vpc-eu-north-1" {
+  source     = "./modules/vpc"
+  region     = "eu-north-1"
+  cidr_block = "10.8.0.0/16"
 }
 
 # Within us for the second group
