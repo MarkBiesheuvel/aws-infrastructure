@@ -1,3 +1,16 @@
+resource "aws_eip" "nat_gateway" {
+  count = "${var.nat_gateway}"
+
+  vpc = true
+}
+
+resource "aws_nat_gateway" "nat_gateway" {
+  count = "${var.nat_gateway}"
+
+  allocation_id = "${aws_eip.nat_gateway.id}"
+  subnet_id     = "${aws_subnet.public_subnets.0.id}"
+}
+
 resource "aws_egress_only_internet_gateway" "egress_only_internet_gateway" {
   vpc_id = "${aws_vpc.vpc.id}"
 }
@@ -8,6 +21,12 @@ resource "aws_default_route_table" "private_route_table" {
   }
 
   default_route_table_id = "${aws_vpc.vpc.default_route_table_id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${coalesce(join("", aws_nat_gateway.nat_gateway.*.id), "INVALID")}"
+    # This doesn't work, but we're ignoring route changes anyway
+  }
 
   route {
     ipv6_cidr_block = "::/0"

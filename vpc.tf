@@ -20,6 +20,7 @@ module "vpc-eu-central-1" {
   source              = "./modules/vpc"
   region              = "eu-central-1"
   cidr_block          = "10.0.0.0/16"
+  nat_gateway         = "1"
   interface_endpoints = ["ssm", "kms"]
 }
 
@@ -49,11 +50,11 @@ module "vpc-eu-west-3" {
 # Within eu-north for the third group
 #  10.8.0.0/16 | eu-north-1
 
-module "vpc-eu-north-1" {
-  source     = "./modules/vpc"
-  region     = "eu-north-1"
-  cidr_block = "10.8.0.0/16"
-}
+# module "vpc-eu-north-1" {
+#   source     = "./modules/vpc"
+#   region     = "eu-north-1"
+#   cidr_block = "10.8.0.0/16"
+# }
 
 # Within us for the second group
 #  10.32.0.0/14 | us-east
