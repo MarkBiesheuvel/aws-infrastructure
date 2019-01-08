@@ -21,7 +21,7 @@ module "vpc-eu-central-1" {
   region              = "eu-central-1"
   cidr_block          = "10.0.0.0/16"
   nat_gateway         = "1"
-  interface_endpoints = ["ssm", "kms"]
+  interface_endpoints = ["ssm"]
 }
 
 # Within eu-west for the third group
