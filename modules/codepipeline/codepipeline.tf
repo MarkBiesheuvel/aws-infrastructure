@@ -83,8 +83,9 @@ resource "aws_codepipeline" "main" {
       output_artifacts = ["source"]
 
       configuration {
-        RepositoryName = "${aws_codecommit_repository.main.repository_name}"
-        BranchName     = "master"
+        RepositoryName       = "${aws_codecommit_repository.main.repository_name}"
+        BranchName           = "master"
+        PollForSourceChanges = "false"
       }
     }
   }
