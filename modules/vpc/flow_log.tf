@@ -1,8 +1,9 @@
 resource "aws_flow_log" "vpc_flow_log" {
-  iam_role_arn    = "${aws_iam_role.vpc_flow_log.arn}"
-  log_group_name  = "${aws_cloudwatch_log_group.vpc_flow_log.name}"
-  traffic_type    = "ALL"
-  vpc_id          = "${aws_vpc.vpc.id}"
+  iam_role_arn         = "${aws_iam_role.vpc_flow_log.arn}"
+  log_destination      = "${aws_cloudwatch_log_group.vpc_flow_log.arn}"
+  log_destination_type = "cloud-watch-logs"
+  traffic_type         = "ALL"
+  vpc_id               = "${aws_vpc.vpc.id}"
 }
 
 resource "aws_cloudwatch_log_group" "vpc_flow_log" {
