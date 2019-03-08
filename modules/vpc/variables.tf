@@ -16,8 +16,3 @@ variable "gateways_endpoints" {
   type = "list"
   default = ["s3", "dynamodb"]
 }
-
-variable "nat_gateway" {
-  type = "string"
-  default = "0"
-}
