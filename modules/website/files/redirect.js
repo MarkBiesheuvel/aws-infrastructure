@@ -10,8 +10,10 @@ exports.handler = (event, context, callback) => {
   const [host] = headers.host
 
   if (host.value === domain_name) {
+    // Proceed as normal if the domain name matches exactly
     callback(null, request)
   } else {
+    // Redirect to the desired domain name if it doesn't match
     console.log(`Redirecting from $${host.value}$${uri} to $${domain_name}$${uri}`)
     callback(null, {
       status: '301',
