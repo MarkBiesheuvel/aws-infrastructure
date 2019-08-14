@@ -1,12 +1,8 @@
-version: 0.1
+version: 0.2
 phases:
   install:
-    commands:
-      - "echo Install started on `date`"
-      - "curl -sS http://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -"
-      - "echo \"deb http://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list"
-      - "apt-get update -y"
-      - "apt-get install -y yarn"
+    runtime-versions:
+      nodejs: 10
   pre_build:
     commands:
       - "echo Pre-build started on `date`"
