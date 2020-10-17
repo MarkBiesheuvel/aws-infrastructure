@@ -1,4 +1,7 @@
 *.tfstate*
 .terraform/
-*.csv
 *.zip
+
+cdk.out
+cdk.context.json
+__pycache__
