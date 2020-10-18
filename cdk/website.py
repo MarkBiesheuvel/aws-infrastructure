@@ -25,8 +25,9 @@ class WebsiteConstruct(core.Construct):
             self, 'CDN',
             price_class=cloudfront.PriceClass.PRICE_CLASS_ALL,
             alias_configuration=cloudfront.AliasConfiguration(
-                acm_cert_ref=certificate.certificate_arn,
                 names=aliases,
+                acm_cert_ref=certificate.certificate_arn,
+                security_policy=cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
             ),
             origin_configs=[
                 cloudfront.SourceConfiguration(
