@@ -1,6 +1,8 @@
 #!/user/bin/env python3
+from typing import List
 from aws_cdk import (
     core,
+    aws_certificatemanager as acm,
     aws_cloudfront as cloudfront,
     aws_s3 as s3
 )
@@ -8,7 +10,7 @@ from aws_cdk import (
 
 class WebsiteConstruct(core.Construct):
 
-    def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
+    def __init__(self, scope: core.Construct, id: str, aliases: List[str], certificate_arn: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
         bucket = s3.Bucket(self, 'Storage')
@@ -17,9 +19,15 @@ class WebsiteConstruct(core.Construct):
 
         bucket.grant_read(origin_identity.grant_principal)
 
+        certificate = acm.Certificate.from_certificate_arn(self, 'Certificate', certificate_arn=certificate_arn)
+
         distribution = cloudfront.CloudFrontWebDistribution(
             self, 'CDN',
             price_class=cloudfront.PriceClass.PRICE_CLASS_ALL,
+            alias_configuration=cloudfront.AliasConfiguration(
+                acm_cert_ref=certificate.certificate_arn,
+                names=aliases,
+            ),
             origin_configs=[
                 cloudfront.SourceConfiguration(
                     s3_origin_source=cloudfront.S3OriginConfig(

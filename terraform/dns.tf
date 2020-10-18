@@ -22,13 +22,13 @@ module "dns" {
   alias_records = [
     {
       prefix  = ""
-      zone_id = "${module.personal-website-hosting.cloudfront_zone_id}"
-      name    = "${module.personal-website-hosting.cloudfront_domain_name}"
+      zone_id = "Z2FDTNDATAQYW2"
+      name    = "d1a8ifl19c9v1l.cloudfront.net"
     },
     {
       prefix  = "*."
-      zone_id = "${module.personal-website-hosting.cloudfront_zone_id}"
-      name    = "${module.personal-website-hosting.cloudfront_domain_name}"
+      zone_id = "Z2FDTNDATAQYW2"
+      name    = "d1a8ifl19c9v1l.cloudfront.net"
     },
   ]
 

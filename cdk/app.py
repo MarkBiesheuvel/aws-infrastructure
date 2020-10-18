@@ -12,17 +12,23 @@ from aws_cdk import (
 
 class WebsiteStack(core.Stack):
 
-    def __init__(self, scope: core.Construct, id: str, domains: List[DomainProps], **kwargs) -> None:
+    def __init__(self, scope: core.Construct, id: str, certificate_arn: str, aliases: List[str], domains: List[DomainProps], **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        website = WebsiteConstruct(self, 'Website')
+        website = WebsiteConstruct(
+            self, 'Website',
+            aliases=aliases,
+            certificate_arn=certificate_arn
+        )
 
-        pipeline = PipelineConstruct(self, 'Pipeline',
+        pipeline = PipelineConstruct(
+            self, 'Pipeline',
             website=website
         )
 
         for domain in domains:
-            DomainConstruct(self, domain.domain_name,
+            DomainConstruct(
+                self, domain.domain_name,
                 domain=domain,
                 website=website,
             )
@@ -45,6 +51,15 @@ app = core.App()
 stack = WebsiteStack(
     app, 'PersonalWebsite',
     env=environment,
+    certificate_arn='arn:aws:acm:us-east-1:312701731826:certificate/054196d8-6cfb-4442-96f5-9fdea2f1dd4a',
+    aliases=[
+        'markbiesheuvel.nl',
+        '*.markbiesheuvel.nl',
+        'markbiesheuvel.com',
+        '*.markbiesheuvel.com',
+        'biesheuvel.amsterdam',
+        '*.biesheuvel.amsterdam'
+    ],
     domains=[
         DomainProps(
             domain_name='markbiesheuvel.nl',
@@ -75,8 +90,13 @@ stack = WebsiteStack(
 stack = WebsiteStack(
     app, 'FarmWebsite',
     env=environment,
+    certificate_arn='arn:aws:acm:us-east-1:312701731826:certificate/5eb0c930-352a-4233-844b-a00a99a78bc1',
+    aliases=[
+        'biesheuvel.farm',
+        '*.biesheuvel.farm'
+    ],
     domains=[
-        # 'biesheuvel.farm'
+        # Currently this is managed manualy
     ]
 )
 app.synth()
