@@ -24,4 +24,7 @@ app = core.App()
 stack = WebsiteStack(
     app, 'PersonalWebsite'
 )
+stack = WebsiteStack(
+    app, 'FarmWebsite'
+)
 app.synth()

@@ -69,7 +69,7 @@ resource "aws_lambda_function" "redirect" {
   publish          = true
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
@@ -84,6 +84,6 @@ resource "aws_lambda_function" "headers" {
   publish          = true
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
