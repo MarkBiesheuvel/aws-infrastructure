@@ -1,4 +1,5 @@
 #!/user/bin/env python3
+from website import WebsiteConstruct
 from aws_cdk import (
     core,
     aws_codebuild as codebuild,
@@ -11,7 +12,7 @@ from aws_cdk import (
 
 class PipelineConstruct(core.Construct):
 
-    def __init__(self, scope: core.Construct, id: str, target_bucket: s3.Bucket, **kwargs) -> None:
+    def __init__(self, scope: core.Construct, id: str, website: WebsiteConstruct, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
         stack = core.Stack.of(self)
 
@@ -95,7 +96,7 @@ class PipelineConstruct(core.Construct):
                         codepipeline_actions.S3DeployAction(
                             action_name='Deploy',
                             input=build_artifact,
-                            bucket=target_bucket,
+                            bucket=website.bucket,
                             extract=True,
                         )
                     ]

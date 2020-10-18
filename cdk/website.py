@@ -39,3 +39,4 @@ class WebsiteConstruct(core.Construct):
         )
 
         self.bucket = bucket
+        self.distribution = distribution
