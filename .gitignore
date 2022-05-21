@@ -1,7 +1,5 @@
-*.tfstate*
-.terraform/
-*.zip
-
+.venv
 cdk.out
 cdk.context.json
+.DS_Store
 __pycache__

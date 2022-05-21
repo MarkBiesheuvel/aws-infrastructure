@@ -1,8 +1,8 @@
 #!/user/bin/env python3
 from typing import List
+from constructs import Construct
 from website import WebsiteConstruct
 from aws_cdk import (
-    core,
     aws_route53 as route53,
     aws_route53_targets as route53_targets,
 )
@@ -16,9 +16,9 @@ class DomainProps:
         self.mx_record_values = mx_record_values
 
 
-class DomainConstruct(core.Construct):
+class DomainConstruct(Construct):
 
-    def __init__(self, scope: core.Construct, id: str, domain: DomainProps, website: WebsiteConstruct, **kwargs) -> None:
+    def __init__(self, scope: Construct, id: str, domain: DomainProps, website: WebsiteConstruct, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
         zone = route53.HostedZone(
@@ -30,7 +30,7 @@ class DomainConstruct(core.Construct):
         root_record_name = domain.domain_name
         wildcard_record_name = '*.{}'.format(root_record_name)
 
-        website_target = route53.AddressRecordTarget.from_alias(
+        website_target = route53.RecordTarget.from_alias(
             alias_target=route53_targets.CloudFrontTarget(website.distribution)
         )
 

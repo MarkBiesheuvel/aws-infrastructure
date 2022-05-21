@@ -1,18 +1,21 @@
 #!/user/bin/env python3
-from os import environ
+from os import getenv
 from typing import List
+from constructs import Construct
 from pipeline import PipelineConstruct
 from website import WebsiteConstruct
 from domain import DomainConstruct, DomainProps
 from aws_cdk import (
-    core,
+    Stack,
+    Environment,
+    App,
     aws_route53 as route53,
 )
 
 
-class WebsiteStack(core.Stack):
+class WebsiteStack(Stack):
 
-    def __init__(self, scope: core.Construct, id: str, certificate_arn: str, aliases: List[str], domains: List[DomainProps], **kwargs) -> None:
+    def __init__(self, scope: Construct, id: str, certificate_arn: str, aliases: List[str], domains: List[DomainProps], **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
         website = WebsiteConstruct(
@@ -42,12 +45,12 @@ gmail_mx_records = [
     route53.MxRecordValue(host_name='ALT4.ASPMX.L.GOOGLE.COM.', priority=10),
 ]
 
-environment = core.Environment(
-    account=environ['CDK_DEFAULT_ACCOUNT'],
-    region=environ['CDK_DEFAULT_REGION'],
+environment = Environment(
+    account=getenv('CDK_DEFAULT_ACCOUNT'),
+    region=getenv('CDK_DEFAULT_REGION'),
 )
 
-app = core.App()
+app = App()
 stack = WebsiteStack(
     app, 'PersonalWebsite',
     env=environment,

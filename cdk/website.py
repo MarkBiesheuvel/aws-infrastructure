@@ -1,16 +1,17 @@
 #!/user/bin/env python3
 from typing import List
+from constructs import Construct
 from aws_cdk import (
-    core,
+    Duration,
     aws_certificatemanager as acm,
     aws_cloudfront as cloudfront,
     aws_s3 as s3
 )
 
 
-class WebsiteConstruct(core.Construct):
+class WebsiteConstruct(Construct):
 
-    def __init__(self, scope: core.Construct, id: str, aliases: List[str], certificate_arn: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, id: str, aliases: List[str], certificate_arn: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
         bucket = s3.Bucket(self, 'Storage')
@@ -24,10 +25,10 @@ class WebsiteConstruct(core.Construct):
         distribution = cloudfront.CloudFrontWebDistribution(
             self, 'CDN',
             price_class=cloudfront.PriceClass.PRICE_CLASS_ALL,
-            alias_configuration=cloudfront.AliasConfiguration(
-                names=aliases,
-                acm_cert_ref=certificate.certificate_arn,
-                security_policy=cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
+            viewer_certificate=cloudfront.ViewerCertificate.from_acm_certificate(
+                certificate=certificate,
+                aliases=aliases,
+                security_policy=cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
             ),
             origin_configs=[
                 cloudfront.SourceConfiguration(
@@ -37,9 +38,9 @@ class WebsiteConstruct(core.Construct):
                     ),
                     behaviors=[
                         cloudfront.Behavior(
-                            default_ttl=core.Duration.days(1),
-                            min_ttl=core.Duration.days(1),
-                            max_ttl=core.Duration.days(365),
+                            default_ttl=Duration.days(1),
+                            min_ttl=Duration.days(1),
+                            max_ttl=Duration.days(365),
                             is_default_behavior=True,
                         )
                     ]

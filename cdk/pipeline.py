@@ -1,7 +1,8 @@
 #!/user/bin/env python3
 from website import WebsiteConstruct
+from constructs import Construct
 from aws_cdk import (
-    core,
+    Stack,
     aws_codebuild as codebuild,
     aws_codecommit as codecommit,
     aws_codepipeline as codepipeline,
@@ -10,11 +11,11 @@ from aws_cdk import (
 )
 
 
-class PipelineConstruct(core.Construct):
+class PipelineConstruct(Construct):
 
-    def __init__(self, scope: core.Construct, id: str, website: WebsiteConstruct, **kwargs) -> None:
+    def __init__(self, scope: Construct, id: str, website: WebsiteConstruct, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
-        stack = core.Stack.of(self)
+        stack = Stack.of(self)
 
         repo = codecommit.Repository(self, 'Repository',
             repository_name=stack.stack_name.lower()
@@ -38,19 +39,19 @@ class PipelineConstruct(core.Construct):
                 'phases': {
                     'install': {
                         'runtime-versions': {
-                            'nodejs': 12
+                            'nodejs': 16
                         }
                     },
                     'pre_build': {
                         'commands': [
                             'echo Pre-build started on `date`',
-                            'yarn install'
+                            'npm install'
                         ]
                     },
                     'build': {
                         'commands': [
                             'echo Build started on `date`',
-                            'yarn build'
+                            'npm run build'
                         ]
                     }
                 },
